@@ -48,6 +48,7 @@ public class StatsRunListener extends RunListener<Run<?, ?>> {
       build.setStartTime(run.getTimestamp().getTime());
       build.setCiUrl(Jenkins.getInstance().getRootUrl());
       build.setJobName(run.getParent().getName());
+      build.setJobFullName(run.getParent().getFullName());
       build.setNumber(run.getNumber());
       build.setResult(buildResult);
       build.setQueueTime(run.getExecutor() != null ?
@@ -145,12 +146,16 @@ public class StatsRunListener extends RunListener<Run<?, ?>> {
     if (environment != null) {
       if (environment.get("GIT_URL") != null) {
         scmInfo.setUrl(environment.get("GIT_URL"));
+      } else if (environment.get("SVN_URL") != null){
+          scmInfo.setUrl(environment.get("SVN_URL"));
       }
       if (environment.get("GIT_BRANCH") != null) {
         scmInfo.setBranch(environment.get("GIT_BRANCH"));
       }
       if (environment.get("GIT_COMMIT") != null) {
         scmInfo.setCommit(environment.get("GIT_COMMIT"));
+      } else if (environment.get("SVN_REVISION") != null){
+          scmInfo.setUrl(environment.get("SVN_REVISION"));
       }
     }
     build.setScmInfo(scmInfo);
@@ -209,6 +214,7 @@ public class StatsRunListener extends RunListener<Run<?, ?>> {
       StatsBuild build = new StatsBuild();
       build.setCiUrl(Jenkins.getInstance().getRootUrl());
       build.setJobName(run.getParent().getName());
+      build.setJobFullName(run.getParent().getFullName());
       build.setNumber(run.getNumber());
       build.setResult(buildResult);
       // Capture duration in milliseconds.
